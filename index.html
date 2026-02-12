@@ -33,6 +33,40 @@ body{
   to{opacity:1}
 }
 
+/* Shooting Star */
+.shooting-star{
+  position:absolute;
+  width:120px;
+  height:2px;
+  background:linear-gradient(90deg,white,transparent);
+  left:-150px;
+  opacity:0;
+}
+@keyframes shoot{
+  0%{transform:translateX(0) translateY(0);opacity:1}
+  100%{transform:translateX(120vw) translateY(40vh);opacity:0}
+}
+
+/* Planets */
+.orbit{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:1;
+}
+.planet{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  animation:rotatePlanet 60s linear infinite;
+  filter:drop-shadow(0 0 15px rgba(255,255,255,.3));
+}
+@keyframes rotatePlanet{
+  from{transform:translateX(-50%) rotate(0deg)}
+  to{transform:translateX(-50%) rotate(360deg)}
+}
+
 /* Card */
 .card{
   background:rgba(255,255,255,0.96);
@@ -43,8 +77,9 @@ body{
   width:min(460px,92vw);
   text-align:center;
   z-index:10;
-  box-shadow:0 30px 70px rgba(0,0,0,.6),
-             0 0 50px rgba(236,72,153,.35);
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.6),
+    0 0 50px rgba(236,72,153,.35);
   transition:transform .6s ease;
 }
 .card.zoom{transform:scale(1.08);}
@@ -102,7 +137,7 @@ button{
   box-shadow:0 0 60px rgba(236,72,153,.6);
 }
 
-/* Constellation (PINK GLOW) */
+/* Constellation (Pink Glow) */
 .const-wrap{
   position:relative;
   width:100%;
@@ -140,12 +175,34 @@ button{
     opacity:0;
   }
 }
+
+/* Mobile */
+@media (max-width:600px){
+  .card{width:95vw;padding:26px 16px;border-radius:22px;}
+  button{width:100%;margin:6px 0;}
+  #no{left:120px;top:60px;}
+}
 </style>
 </head>
 
 <body>
 
 <audio id="music" src="taaron-se.mp3" preload="auto"></audio>
+<div class="shooting-star" id="shoot"></div>
+
+<!-- Restored Planets -->
+<div class="orbit" style="width:420px;height:420px;left:6vw;top:18vh">
+  <img src="planet-earth.png" class="planet" width="150">
+</div>
+<div class="orbit" style="width:560px;height:560px;right:4vw;top:8vh">
+  <img src="planet-saturn.png" class="planet" width="210">
+</div>
+<div class="orbit" style="width:320px;height:320px;left:12vw;bottom:8vh">
+  <img src="planet-mars.png" class="planet" width="120">
+</div>
+<div class="orbit" style="width:640px;height:640px;right:6vw;bottom:2vh">
+  <img src="planet-jupiter.png" class="planet" width="190">
+</div>
 
 <div class="card" id="card">
   <h1>Valentine Surprise 💌</h1>
@@ -154,6 +211,8 @@ button{
 </div>
 
 <script>
+
+/* Generate stars */
 for(let i=0;i<120;i++){
   const s=document.createElement('div');
   s.className='star';
@@ -161,6 +220,15 @@ for(let i=0;i<120;i++){
   s.style.top=Math.random()*100+'vh';
   document.body.appendChild(s);
 }
+
+/* Shooting star */
+setInterval(()=>{
+  const shoot=document.getElementById('shoot');
+  shoot.style.top=Math.random()*40+'%';
+  shoot.style.animation='none';
+  void shoot.offsetWidth;
+  shoot.style.animation='shoot 2s linear';
+},12000);
 
 const card=document.getElementById('card');
 
