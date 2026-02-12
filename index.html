@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Valentine Surprise</title>
+
+<style>
+*{box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+
+body{
+  margin:0;
+  min-height:100vh;
+  overflow:hidden;
+  background:radial-gradient(circle at top,#0b1d3a,#000 72%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+
+/* Stars */
+.star{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:white;
+  opacity:.6;
+  animation:twinkle 3s infinite ease-in-out alternate;
+}
+@keyframes twinkle{
+  from{opacity:.4}
+  to{opacity:1}
+}
+
+/* Shooting star */
+.shooting-star{
+  position:absolute;
+  width:120px;
+  height:2px;
+  background:linear-gradient(90deg,white,transparent);
+  left:-150px;
+  opacity:0;
+}
+@keyframes shoot{
+  0%{transform:translateX(0) translateY(0);opacity:1}
+  100%{transform:translateX(120vw) translateY(40vh);opacity:0}
+}
+
+/* Planets */
+.orbit{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:1;
+}
+.planet{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  animation:rotatePlanet 60s linear infinite;
+  filter:drop-shadow(0 0 15px rgba(255,255,255,.3));
+}
+@keyframes rotatePlanet{
+  from{transform:translateX(-50%) rotate(0deg)}
+  to{transform:translateX(-50%) rotate(360deg)}
+}
+
+/* Card */
+.card{
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(6px);
+  color:#0f172a;
+  padding:36px 28px;
+  border-radius:30px;
+  width:min(460px,92vw);
+  text-align:center;
+  z-index:10;
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.6),
+    0 0 50px rgba(253,230,138,.35);
+  transition:transform .6s ease;
+}
+.card.zoom{transform:scale(1.08);}
+
+@keyframes subtleShake{
+  0%{transform:scale(1.08) translateX(0)}
+  25%{transform:scale(1.08) translateX(-2px)}
+  50%{transform:scale(1.08) translateX(2px)}
+  75%{transform:scale(1.08) translateX(-1px)}
+  100%{transform:scale(1.08) translateX(0)}
+}
+.card.impact{animation:subtleShake .4s ease;}
+
+button{
+  padding:14px 32px;
+  font-size:16px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  margin:8px;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.primary{
+  background:linear-gradient(135deg,#ec4899,#f472b6);
+  color:white;
+}
+.primary:hover{
+  transform:scale(1.18);
+  box-shadow:0 12px 35px rgba(236,72,153,.6);
+}
+.secondary{background:#e5e7eb}
+
+.buttons{position:relative;height:150px}
+#no{
+  position:absolute;
+  left:220px;
+  top:40px;
+  transition:.2s ease;
+}
+.cat{position:absolute;font-size:26px;pointer-events:none}
+
+/* Photo */
+.star-core{
+  width:170px;
+  height:170px;
+  margin:30px auto 0;
+  border-radius:50%;
+  background:url("us2.jpg") center/cover no-repeat;
+  box-shadow:0 0 60px rgba(253,230,138,.7);
+}
+
+/* Constellation */
+.const-wrap{
+  position:relative;
+  width:100%;
+  height:160px;
+  margin:24px auto 0;
+  overflow:hidden;
+}
+.const-star{
+  position:absolute;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#fde68a;
+  box-shadow:0 0 14px rgba(253,230,138,.9);
+  animation:pulseStar 2.4s ease-in-out infinite alternate;
+}
+@keyframes pulseStar{
+  from{transform:scale(1);opacity:.8}
+  to{transform:scale(1.4);opacity:1}
+}
+.const-line{
+  position:absolute;
+  height:2px;
+  background:rgba(253,230,138,.85);
+  transform-origin:left center;
+  box-shadow:0 0 12px rgba(253,230,138,.8);
+  opacity:0;
+}
+
+.final-text{
+  animation:textPop .6s ease forwards;
+}
+@keyframes textPop{
+  0%{transform:scale(.9);opacity:0}
+  60%{transform:scale(1.05)}
+  100%{transform:scale(1);opacity:1}
+}
+
+.glitter{
+  background:linear-gradient(90deg,#fde68a,#f472b6,#60a5fa,#fde68a);
+  background-size:300%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:glitter 3s linear infinite;
+}
+@keyframes glitter{
+  0%{background-position:0%}
+  100%{background-position:300%}
+}
+
+/* Confetti */
+.confetti{
+  position:fixed;
+  width:8px;
+  height:14px;
+  top:-20px;
+  opacity:.9;
+  animation:fall 3s linear forwards;
+}
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* Mobile */
+@media (max-width:600px){
+  .card{width:95vw;padding:26px 16px;border-radius:22px;}
+  button{width:100%;margin:6px 0;}
+  #no{left:120px;top:60px;}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="taaron-se.mp3" preload="auto"></audio>
+<div class="shooting-star" id="shoot"></div>
+
+<div class="orbit" style="width:420px;height:420px;left:6vw;top:18vh">
+  <img src="planet-earth.png" class="planet" width="150">
+</div>
+<div class="orbit" style="width:560px;height:560px;right:4vw;top:8vh">
+  <img src="planet-saturn.png" class="planet" width="210">
+</div>
+<div class="orbit" style="width:320px;height:320px;left:12vw;bottom:8vh">
+  <img src="planet-mars.png" class="planet" width="120">
+</div>
+<div class="orbit" style="width:640px;height:640px;right:6vw;bottom:2vh">
+  <img src="planet-jupiter.png" class="planet" width="190">
+</div>
+
+<div class="card" id="card">
+  <h1>Valentine Surprise 💌</h1>
+  <p>I have something important to ask you...</p>
+  <button class="primary" onclick="ask()">Start ❤️</button>
+</div>
+
+<script>
+for(let i=0;i<120;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  s.style.left=Math.random()*100+'vw';
+  s.style.top=Math.random()*100+'vh';
+  document.body.appendChild(s);
+}
+
+setInterval(()=>{
+  const shoot=document.getElementById('shoot');
+  shoot.style.top=Math.random()*40+'%';
+  shoot.style.animation='none';
+  void shoot.offsetWidth;
+  shoot.style.animation='shoot 2s linear';
+},12000);
+
+const card=document.getElementById('card');
+
+function ask(){
+  card.innerHTML=`
+    <h1>Sidra 💖</h1>
+    <p>Will you be my Valentine?</p>
+    <div class="buttons">
+      <button class="primary" id="yes">Yes 💘</button>
+      <button class="secondary" id="no">No</button>
+      <div class="cat" id="cat">🐱</div>
+    </div>
+  `;
+  const no=document.getElementById('no');
+  const area=document.querySelector('.buttons');
+
+  function run(){
+    const x=Math.random()*(area.clientWidth-no.offsetWidth);
+    const y=Math.random()*(area.clientHeight-no.offsetHeight);
+    no.style.left=x+'px';
+    no.style.top=y+'px';
+  }
+
+  no.addEventListener('mouseenter',run);
+  no.addEventListener('touchstart',run);
+
+  document.getElementById('yes').onclick=reveal;
+}
+
+function launchConfetti(){
+  const colors=["#fde68a","#f472b6","#60a5fa","#34d399","#f87171"];
+  for(let i=0;i<120;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+function reveal(){
+  card.classList.add("zoom");
+
+  card.innerHTML=`
+    <div class="star-core"></div>
+    <div style="margin-top:22px">
+      <div class="glitter" style="font-size:40px">Sidra</div>
+      <div class="final-text" style="font-size:28px;font-weight:800;margin-top:10px">
+        YOU'RE MY VALENTINE ❤️
+      </div>
+    </div>
+    <div class="const-wrap" id="const"></div>
+  `;
+
+  setTimeout(()=>{
+    card.classList.add("impact");
+    setTimeout(()=>card.classList.remove("impact"),400);
+  },400);
+
+  document.getElementById('music').play();
+  launchConfetti();
+}
+</script>
+
+</body>
+</html>
