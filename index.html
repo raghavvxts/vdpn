@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Valentine Surprise</title>
 
 <style>
@@ -26,25 +26,23 @@ body{
   height:2px;
   background:white;
   opacity:.6;
-  animation:twinkle 3s infinite ease-in-out alternate;
+  animation:twinkle 3s infinite alternate;
 }
 @keyframes twinkle{
   from{opacity:.4}
   to{opacity:1}
 }
 
-/* Shooting Star */
-.shooting-star{
+/* Floating Hearts */
+.heart{
   position:absolute;
-  width:120px;
-  height:2px;
-  background:linear-gradient(90deg,white,transparent);
-  left:-150px;
-  opacity:0;
+  font-size:18px;
+  opacity:.4;
+  animation:floatUp linear forwards;
 }
-@keyframes shoot{
-  0%{transform:translateX(0) translateY(0);opacity:1}
-  100%{transform:translateX(120vw) translateY(40vh);opacity:0}
+@keyframes floatUp{
+  from{transform:translateY(0) scale(1);opacity:.5}
+  to{transform:translateY(-120vh) scale(1.5);opacity:0}
 }
 
 /* Planets */
@@ -72,26 +70,16 @@ body{
   background:rgba(255,255,255,0.96);
   backdrop-filter:blur(6px);
   color:#0f172a;
-  padding:36px 28px;
-  border-radius:30px;
+  padding:30px 22px;
+  border-radius:26px;
   width:min(460px,92vw);
   text-align:center;
   z-index:10;
-  box-shadow:
-    0 30px 70px rgba(0,0,0,.6),
-    0 0 50px rgba(236,72,153,.35);
-  transition:transform .6s ease;
+  box-shadow:0 30px 70px rgba(0,0,0,.6),
+             0 0 50px rgba(236,72,153,.35);
+  transition:transform .5s ease;
 }
-.card.zoom{transform:scale(1.08);}
-
-@keyframes subtleShake{
-  0%{transform:scale(1.08) translateX(0)}
-  25%{transform:scale(1.08) translateX(-2px)}
-  50%{transform:scale(1.08) translateX(2px)}
-  75%{transform:scale(1.08) translateX(-1px)}
-  100%{transform:scale(1.08) translateX(0)}
-}
-.card.impact{animation:subtleShake .4s ease;}
+.card.zoom{transform:scale(1.05);}
 
 button{
   padding:14px 32px;
@@ -107,101 +95,57 @@ button{
   color:white;
 }
 .primary:hover{
-  transform:scale(1.18);
+  transform:scale(1.15);
   box-shadow:0 12px 35px rgba(236,72,153,.6);
 }
 .secondary{background:#e5e7eb}
 
-.buttons{position:relative;height:160px}
+.buttons{
+  position:relative;
+  height:170px;
+}
 
 #no{
   position:absolute;
-  left:220px;
+  left:200px;
   top:40px;
   transition:.2s ease;
 }
 
 .cat{
   position:absolute;
-  font-size:26px;
+  font-size:24px;
   pointer-events:none;
 }
 
 /* Photo */
 .star-core{
-  width:170px;
-  height:170px;
-  margin:30px auto 0;
+  width:150px;
+  height:150px;
+  margin:20px auto 0;
   border-radius:50%;
   background:url("us2.jpg") center/cover no-repeat;
-  box-shadow:0 0 60px rgba(236,72,153,.6);
+  box-shadow:0 0 50px rgba(236,72,153,.6);
 }
 
-/* Constellation (Pink Glow) */
-.const-wrap{
-  position:relative;
-  width:100%;
-  height:160px;
-  margin:24px auto 0;
-  overflow:hidden;
-}
-.const-star{
-  position:absolute;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#f472b6;
-  box-shadow:0 0 14px rgba(236,72,153,.9);
-}
-.const-line{
-  position:absolute;
-  height:2px;
-  background:rgba(236,72,153,.8);
-  transform-origin:left center;
-  opacity:0;
-}
-
-/* Confetti */
-.confetti{
-  position:fixed;
-  width:8px;
-  height:14px;
-  top:-20px;
-  animation:fall 3s linear forwards;
-}
-@keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(720deg);
-    opacity:0;
-  }
-}
-
-/* Mobile */
+/* Mobile Refinement */
 @media (max-width:600px){
-  .card{width:95vw;padding:26px 16px;border-radius:22px;}
-  button{width:100%;margin:6px 0;}
-  #no{left:120px;top:60px;}
+  .card{width:95vw;padding:22px 14px;border-radius:20px;}
+  button{width:100%;margin:8px 0;}
+  #no{left:120px;top:70px;}
+  .orbit{transform:scale(.7);}
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music" src="taaron-se.mp3" preload="auto"></audio>
-<div class="shooting-star" id="shoot"></div>
-
-<!-- Restored Planets -->
+<!-- Planets -->
 <div class="orbit" style="width:420px;height:420px;left:6vw;top:18vh">
   <img src="planet-earth.png" class="planet" width="150">
 </div>
 <div class="orbit" style="width:560px;height:560px;right:4vw;top:8vh">
   <img src="planet-saturn.png" class="planet" width="210">
-</div>
-<div class="orbit" style="width:320px;height:320px;left:12vw;bottom:8vh">
-  <img src="planet-mars.png" class="planet" width="120">
-</div>
-<div class="orbit" style="width:640px;height:640px;right:6vw;bottom:2vh">
-  <img src="planet-jupiter.png" class="planet" width="190">
 </div>
 
 <div class="card" id="card">
@@ -212,8 +156,8 @@ button{
 
 <script>
 
-/* Generate stars */
-for(let i=0;i<120;i++){
+/* Stars */
+for(let i=0;i<80;i++){
   const s=document.createElement('div');
   s.className='star';
   s.style.left=Math.random()*100+'vw';
@@ -221,14 +165,18 @@ for(let i=0;i<120;i++){
   document.body.appendChild(s);
 }
 
-/* Shooting star */
-setInterval(()=>{
-  const shoot=document.getElementById('shoot');
-  shoot.style.top=Math.random()*40+'%';
-  shoot.style.animation='none';
-  void shoot.offsetWidth;
-  shoot.style.animation='shoot 2s linear';
-},12000);
+/* Floating Hearts Generator */
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"vw";
+  h.style.bottom="-20px";
+  h.style.animationDuration=(6+Math.random()*4)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),10000);
+}
+setInterval(createHeart,900);
 
 const card=document.getElementById('card');
 
@@ -262,97 +210,44 @@ function ask(){
   document.getElementById('yes').onclick=reveal;
 }
 
-function launchConfetti(){
-  const colors=["#f472b6","#ec4899","#fb7185","#f9a8d4","#fca5a5"];
-  for(let i=0;i<120;i++){
-    const c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=colors[Math.floor(Math.random()*colors.length)];
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),4000);
-  }
-}
-
 function reveal(){
+
+  /* Soft haptic vibration */
+  if(navigator.vibrate){
+    navigator.vibrate(80);
+  }
+
   card.classList.add("zoom");
 
   card.innerHTML=`
     <div class="star-core"></div>
-    <div style="margin-top:22px">
-      <div style="font-size:40px;font-weight:bold;color:#ec4899;">Sidra</div>
-      <div style="font-size:28px;font-weight:800;margin-top:10px">
+    <div style="margin-top:18px">
+      <div style="font-size:30px;font-weight:bold;color:#ec4899;">Sidra</div>
+      <div style="font-size:22px;font-weight:800;margin-top:10px">
         YOU'RE MY VALENTINE ❤️
       </div>
     </div>
-    <div class="const-wrap" id="const"></div>
   `;
 
-  document.getElementById('music').play();
-  drawConstellation();
+  launchConfetti();
 }
 
-function drawConstellation(){
-  const wrap=document.getElementById('const');
-  wrap.innerHTML='';
-
-  const letters={
-    S:{points:[[40,0],[0,0],[0,27],[40,27],[40,55],[0,55]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5]]},
-    I:{points:[[20,0],[20,55]],lines:[[0,1]]},
-    D:{points:[[0,0],[0,55],[30,45],[40,27],[30,10],[0,0]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5]]},
-    R:{points:[[0,55],[0,0],[40,0],[40,27],[0,27],[40,55]],lines:[[0,1],[1,2],[2,3],[1,4],[4,5]]},
-    A:{points:[[0,55],[20,0],[40,55],[10,30],[30,30]],lines:[[0,1],[1,2],[3,4]]}
-  };
-
-  const name="SIDRA";
-  const baseSpacing=55;
-  const scale=Math.min(1,(wrap.clientWidth-20)/(name.length*baseSpacing));
-  const spacing=baseSpacing*scale;
-  const startX=(wrap.clientWidth-(name.length*spacing))/2;
-  const baseY=20;
-
-  let offsetX=startX;
-  let delay=0;
-
-  for(let char of name){
-    const data=letters[char];
-    const pts=data.points;
-
-    pts.forEach(p=>{
-      const s=document.createElement('div');
-      s.className='const-star';
-      s.style.left=(offsetX+p[0]*scale)+'px';
-      s.style.top=(baseY+p[1]*scale)+'px';
-      wrap.appendChild(s);
-    });
-
-    data.lines.forEach(pair=>{
-      const [i,j]=pair;
-      const x1=offsetX+pts[i][0]*scale;
-      const y1=baseY+pts[i][1]*scale;
-      const x2=offsetX+pts[j][0]*scale;
-      const y2=baseY+pts[j][1]*scale;
-
-      const l=document.createElement('div');
-      l.className='const-line';
-      l.style.left=x1+'px';
-      l.style.top=y1+'px';
-      const dx=x2-x1;
-      const dy=y2-y1;
-      l.style.width=Math.hypot(dx,dy)+'px';
-      l.style.transform=`rotate(${Math.atan2(dy,dx)}rad)`;
-      wrap.appendChild(l);
-
-      setTimeout(()=>{l.style.opacity="1";},delay);
-      delay+=180;
-    });
-
-    offsetX+=spacing;
+function launchConfetti(){
+  const colors=["#f472b6","#ec4899","#fb7185","#f9a8d4","#fca5a5"];
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.style.position="fixed";
+    c.style.width="8px";
+    c.style.height="14px";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-20px";
+    c.style.animation="fall 3s linear forwards";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
   }
-
-  setTimeout(launchConfetti,delay+400);
 }
 </script>
-
 </body>
 </html>
+
